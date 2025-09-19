@@ -6,7 +6,158 @@
     <title>Ravi Gupta - Frontend Developer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            scroll-behavior: smooth; 
+        }
+
+        .gradient-bg { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        }
+
+        .card-hover { 
+            transition: all 0.3s ease; 
+        }
+
+        .card-hover:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
+        }
+
+        .typing-animation { 
+            border-right: 2px solid #667eea; 
+            animation: blink 1s infinite; 
+        }
+
+        @keyframes blink { 
+            0%, 50% { 
+                border-color: transparent; 
+            } 
+            51%, 100% { 
+                border-color: #667eea; 
+            } 
+        }
+
+        .animate-fade-in { 
+            animation: fadeIn 0.8s ease-in-out; 
+        }
+
+        .animate-slide-up { 
+            animation: slideUp 0.8s ease-out; 
+            opacity: 0; 
+            transform: translateY(30px); 
+        }
+
+        .in-view { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        @keyframes fadeIn { 
+            from { 
+                opacity: 0; 
+            } 
+            to { 
+                opacity: 1; 
+            } 
+        }
+
+        @keyframes slideUp { 
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
+        }
+
+        .project-card { 
+            background: linear-gradient(145deg, #ffffff, #f3f4f6); 
+        }
+
+        .tech-tag { 
+            background: linear-gradient(45deg, #667eea, #764ba2); 
+        }
+
+        .certificate-card {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .certificate-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            transition: left 0.5s ease;
+        }
+
+        .certificate-card:hover::before {
+            left: 100%;
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .resume-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .resume-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .resume-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+        }
+
+        .resume-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10000;
+        }
+
+        .resume-close:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
     <!-- Navigation -->
@@ -23,6 +174,9 @@
                     <a href="#skills" class="text-gray-700 hover:text-purple-600 transition-colors">Skills</a>
                     <a href="#certificates" class="text-gray-700 hover:text-purple-600 transition-colors">Certificates</a>
                     <a href="#contact" class="text-gray-700 hover:text-purple-600 transition-colors">Contact</a>
+                    <button onclick="openResumeModal()" class="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 transition-colors">
+                        <i class="fas fa-file-pdf mr-2"></i>Resume
+                    </button>
                 </div>
                 <div class="md:hidden">
                     <button id="mobile-menu-btn" class="text-gray-700 focus:outline-none">
@@ -40,6 +194,9 @@
                 <a href="#skills" class="block py-2 text-gray-700 hover:text-purple-600">Skills</a>
                 <a href="#certificates" class="block py-2 text-gray-700 hover:text-purple-600">Certificates</a>
                 <a href="#contact" class="block py-2 text-gray-700 hover:text-purple-600">Contact</a>
+                <button onclick="openResumeModal()" class="w-full text-left py-2 text-purple-600 font-semibold">
+                    <i class="fas fa-file-pdf mr-2"></i>Resume
+                </button>
             </div>
         </div>
     </nav>
@@ -65,9 +222,9 @@
                 <a href="#projects" class="bg-white text-purple-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-transform hover:scale-105">
                     View My Work
                 </a>
-                <a href="#contact" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition-all hover:scale-105">
-                    Get In Touch
-                </a>
+                <button onclick="openResumeModal()" class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-purple-600 transition-all hover:scale-105">
+                    <i class="fas fa-download mr-2"></i>Download Resume
+                </button>
             </div>
         </div>
     </section>
@@ -149,6 +306,21 @@
                         <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">Hindi</span>
                         <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">Konkani</span>
                         <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">Marathi</span>
+                    </div>
+                    
+                    <!-- Resume Quick Actions -->
+                    <div class="mt-8 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border border-purple-100">
+                        <h5 class="font-semibold text-gray-900 mb-3 flex items-center">
+                            <i class="fas fa-file-alt mr-2 text-purple-600"></i>Resume
+                        </h5>
+                        <div class="flex gap-2">
+                            <button onclick="openResumeModal()" class="flex-1 bg-purple-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+                                <i class="fas fa-eye mr-1"></i>View
+                            </button>
+                            <a href="assets/documents/resume.pdf" download="Ravi_Gupta_Resume.pdf" class="flex-1 border border-purple-600 text-purple-600 text-center py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-50 transition-colors">
+                                <i class="fas fa-download mr-1"></i>Download
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -321,10 +493,10 @@
                         </div>
                     </div>
                     <div class="flex gap-3">
-                        <a href="internship_certificate.pdf" target="_blank" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold">
+                        <a href="assets/documents/internship_certificate.pdf" target="_blank" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold">
                             <i class="fas fa-eye mr-2"></i>View Certificate
                         </a>
-                        <a href="internship_certificate.pdf" download class="flex-1 border border-purple-600 text-purple-600 text-center py-2 px-4 rounded-lg hover:bg-purple-50 transition-colors text-sm font-semibold">
+                        <a href="assets/documents/internship_certificate.pdf" download class="flex-1 border border-purple-600 text-purple-600 text-center py-2 px-4 rounded-lg hover:bg-purple-50 transition-colors text-sm font-semibold">
                             <i class="fas fa-download mr-2"></i>Download
                         </a>
                     </div>
@@ -353,10 +525,10 @@
                         </div>
                     </div>
                     <div class="flex gap-3">
-                        <a href="letter_of_appreciation.pdf" target="_blank" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold">
+                        <a href="assets/documents/letter_of_appreciation.pdf" target="_blank" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold">
                             <i class="fas fa-eye mr-2"></i>View Letter
                         </a>
-                        <a href="letter_of_appreciation.pdf" download class="flex-1 border border-purple-600 text-purple-600 text-center py-2 px-4 rounded-lg hover:bg-purple-50 transition-colors text-sm font-semibold">
+                        <a href="assets/documents/letter_of_appreciation.pdf" download class="flex-1 border border-purple-600 text-purple-600 text-center py-2 px-4 rounded-lg hover:bg-purple-50 transition-colors text-sm font-semibold">
                             <i class="fas fa-download mr-2"></i>Download
                         </a>
                     </div>
@@ -385,10 +557,10 @@
                         </div>
                     </div>
                     <div class="flex gap-3">
-                        <a href="fynd_certificate.pdf" target="_blank" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold">
+                        <a href="assets/documents/fynd_certificate.pdf" target="_blank" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors text-sm font-semibold">
                             <i class="fas fa-eye mr-2"></i>View Certificate
                         </a>
-                        <a href="fynd_certificate.pdf" download class="flex-1 border border-purple-600 text-purple-600 text-center py-2 px-4 rounded-lg hover:bg-purple-50 transition-colors text-sm font-semibold">
+                        <a href="assets/documents/fynd_certificate.pdf" download class="flex-1 border border-purple-600 text-purple-600 text-center py-2 px-4 rounded-lg hover:bg-purple-50 transition-colors text-sm font-semibold">
                             <i class="fas fa-download mr-2"></i>Download
                         </a>
                     </div>
@@ -492,6 +664,16 @@
         </div>
     </section>
 
+    <!-- Resume Modal -->
+    <div id="resume-modal" class="resume-modal">
+        <div class="resume-content">
+            <button class="resume-close" onclick="closeResumeModal()">
+                <i class="fas fa-times text-gray-600"></i>
+            </button>
+            <iframe id="resume-iframe" src="" width="100%" height="600px" style="border: none; border-radius: 20px;"></iframe>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -502,6 +684,37 @@
     </footer>
 
     <script>
+        // Resume Modal Functions
+        function openResumeModal() {
+            const modal = document.getElementById('resume-modal');
+            const iframe = document.getElementById('resume-iframe');
+            iframe.src = 'assets/documents/resume.pdf';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResumeModal() {
+            const modal = document.getElementById('resume-modal');
+            const iframe = document.getElementById('resume-iframe');
+            modal.classList.remove('active');
+            iframe.src = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('resume-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeResumeModal();
+            }
+        });
+
+        // Close modal with escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeResumeModal();
+            }
+        });
+
         // Mobile menu toggle
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -575,3 +788,5 @@
             typeText();
         }
     </script>
+</body>
+</html>
